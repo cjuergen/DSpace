@@ -33,6 +33,7 @@
 <%@ page import="org.dspace.content.Community" %>
 <%@ page import="org.dspace.core.ConfigurationManager" %>
 <%@ page import="org.dspace.core.NewsManager" %>
+<%@ page import="org.dspace.core.Utils" %>
 <%@ page import="org.dspace.browse.ItemCounter" %>
 <%@ page import="org.dspace.content.Metadatum" %>
 <%@ page import="org.dspace.content.Item" %>
@@ -113,19 +114,19 @@ if (submissions != null && submissions.count() > 0)
 		        String displayTitle = "Untitled";
 		        if (dcv != null & dcv.length > 0)
 		        {
-		            displayTitle = dcv[0].value;
+					displayTitle = Utils.addEntities(StringUtils.abbreviate(dcv[0].value, 400));
 		        }
 		        dcv = item.getMetadata("dc", "description", "abstract", Item.ANY);
 		        String displayAbstract = "";
 		        if (dcv != null & dcv.length > 0)
 		        {
-		            displayAbstract = dcv[0].value;
+		        	displayAbstract = Utils.addEntities(StringUtils.abbreviate(dcv[0].value, 500));
 		        }
 		%>
 		    <div style="padding-bottom: 50px; min-height: 200px;" class="item <%= first?"active":""%>">
-		      <div style="padding-left: 80px; padding-right: 80px; display: inline-block;"><%= StringUtils.abbreviate(displayTitle, 400) %> 
-		      	<a href="<%= request.getContextPath() %>/handle/<%=item.getHandle() %>" class="btn btn-success">See</a>
-                        <p><%= StringUtils.abbreviate(displayAbstract, 500) %></p>
+		      <div style="padding-left: 80px; padding-right: 80px; display: inline-block;"><%= displayTitle %> 
+		      	<a href="<%= request.getContextPath() %>/handle/<%=item.getHandle() %>" class="btn btn-success"><fmt:message key="jsp.general.see"/></a>
+                <p><%= displayAbstract %></p>
 		      </div>
 		    </div>
 		<%

@@ -32,6 +32,7 @@
 <%@ page import="org.dspace.browse.ItemCounter" %>
 <%@ page import="org.dspace.content.*" %>
 <%@ page import="org.dspace.core.ConfigurationManager" %>
+<%@ page import="org.dspace.core.Utils" %>
 <%@ page import="javax.servlet.jsp.jstl.fmt.LocaleSupport" %>
 
 <%
@@ -153,22 +154,26 @@
 		{
 			Metadatum[] dcv = items[i].getMetadata("dc", "title", null, Item.ANY);
 			String displayTitle = "Untitled";
-			if (dcv != null)
+			if (dcv != null & dcv.length > 0)
 			{
-				if (dcv.length > 0)
-				{
-					displayTitle = dcv[0].value;
-				}
+				displayTitle = Utils.addEntities(StringUtils.abbreviate(dcv[0].value, 400));
 			}
-			%>
-		    <div style="padding-bottom: 50px; min-height: 200px;" class="item <%= first?"active":""%>">
-		      <div style="padding-left: 80px; padding-right: 80px; display: inline-block;"><%= StringUtils.abbreviate(displayTitle, 400) %> 
-		      	<a href="<%= request.getContextPath() %>/handle/<%=items[i].getHandle() %>" class="btn btn-success">See</a>
-		      </div>
-		    </div>
+		    dcv = items[i].getMetadata("dc", "description", "abstract", Item.ANY);
+        	String displayAbstract = "";
+        	if (dcv != null & dcv.length > 0)
+        	{
+        		displayAbstract = Utils.addEntities(StringUtils.abbreviate(dcv[0].value, 500));
+        	}
+	%>
+	    <div style="padding-bottom: 50px; min-height: 200px;" class="item <%= first?"active":""%>">
+	      <div style="padding-left: 80px; padding-right: 80px; display: inline-block;"><%= displayTitle %> 
+	      	<a href="<%= request.getContextPath() %>/handle/<%=items[i].getHandle() %>" class="btn btn-success"><fmt:message key="jsp.general.see"/></a>
+	      	<p><%= displayAbstract %></p>
+	      </div>
+	    </div>
 <%
-				first = false;
-		     }
+			first = false;
+		}
 		%>
 		</div>
 		
