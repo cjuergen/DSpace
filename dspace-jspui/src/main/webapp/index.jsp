@@ -82,4 +82,11 @@
 
         JSPManager.showInternalError(request, response);
     }
+	finally
+	{
+        if(context!=null && context.isValid())
+		{
+            context.abort();
+		}
+	}
 %>
